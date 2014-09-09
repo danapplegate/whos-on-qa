@@ -33,7 +33,6 @@ app.post('/outgoing', function(req, res) {
     _.each(stacks, function(name, stackId) {
         var req = opsworks.describeDeployments({StackId: stackId});
         req.on('success', function(response) {
-            console.log(response.data);
             var validDeployments = _.filter(response.data.Deployments, function(deployment) {
                 return deployment.IamUserArn;
             });
@@ -48,12 +47,10 @@ app.post('/outgoing', function(req, res) {
             stacksToProcess = _.without(stacksToProcess, stackId);
         });
         req.on('error', function(error) {
-            console.log(error);
             responseLines.push(stacks[stackId] + ': Error - ' + error.message);
             stacksToProcess = _.without(stacksToProcess, stackId);
         });
         req.on('complete', function() {
-            console.log(stacksToProcess);
             if (stacksToProcess.length == 0) {
                 res.json({
                     text: '```' + responseLines.join("\n") + '```',

@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var moment = require('moment');
 var express = require('express');
 var bodyParser = require('body-parser');
 var Slackhook = require('slackhook');
@@ -41,8 +42,8 @@ app.post('/outgoing', function(req, res) {
                 usernameParts = deployment.IamUserArn.split(':'),
                 namePath = usernameParts.pop(),
                 userName = namePath.substring(5),
-                created = new Date(deployment.CreatedAt),
-                createdString = created.toLocaleString('en-US', {timeZone: 'EDT', timeZoneName: 'short'});
+                created = moment(deployment.CreatedAt),
+                createdString = created.format('llll');
             responseLines.push(stackName + ': user ' + userName + ' since ' + createdString);
             stacksToProcess = _.without(stacksToProcess, stackId);
         });

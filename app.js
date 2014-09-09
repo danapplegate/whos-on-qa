@@ -21,8 +21,9 @@ app.post('/outgoing', function(req, res) {
         StackId: 'c7dffdc5-7a1a-4968-8d23-1221457e1449'
     };
     opsworks.describeDeployments(config, function(err, data) {
+        console.log(data);
         res.json({
-            text: err || data.Deployments,
+            text: data.Deployments,
             username: hook.user_name
         });
     });

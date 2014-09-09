@@ -27,34 +27,41 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 app.post('/outgoing', function(req, res) {
     var hook = slack.respond(req.body);
-    opsworks.describeDeployments({}, function(err, data) {
-        console.log(data);
-        if (err) {
-            res.json({text: 'OpsWorks error: ' + err.message});
-        } else {
-            var validDeployments = _.filter(data.Deployments, function(deployment) {
+
+    var stacksToProcess = _.keys(stacks);
+    var responseLines = [];
+    _.each(stacks, function(name, stackId) {
+        var req = opsworks.describeDeployments({StackId: stackId});
+        req.on('success', function(response) {
+            console.log(response.data);
+            var validDeployments = _.filter(response.data.Deployments, function(deployment) {
                 return deployment.IamUserArn;
             });
-            var groupedDeployments = _.groupBy(validDeployments, function(deployment) {
-                return deployment.StackId;
-            });
-            var configuredDeployments = _.pick(groupedDeployments, _.keys(stacks));
-            var responseLines = [];
-            _.each(configuredDeployments, function(deployments, stackId) {
-                var deployment = _.first(deployments),
-                    stackName = stacks[deployment.StackId],
-                    usernameParts = deployment.IamUserArn.split(':'),
-                    namePath = usernameParts.pop(),
-                    name = namePath.substring(5),
-                    created = new Date(deployment.CreatedAt),
-                    createdString = created.toLocaleString('en-US', {timeZone: 'America/New_York'});
-                responseLines.push(stackName + ': user ' + name + ' since ' + createdString);
-            });
-            res.json({
-                text: '```' + responseLines.join("\n") + '```',
-                username: "Who's on QA Bot"
-            });
-        }
+            var deployment = _.first(validDeployments),
+                stackName = stacks[deployment.StackId],
+                usernameParts = deployment.IamUserArn.split(':'),
+                namePath = usernameParts.pop(),
+                userName = namePath.substring(5),
+                created = new Date(deployment.CreatedAt),
+                createdString = created.toLocaleString('en-US', {timeZone: 'America/New_York'});
+            responseLines.push(stackName + ': user ' + userName + ' since ' + createdString);
+            stacksToProcess = _.without(stacksToProcess, stackId);
+        });
+        req.on('error', function(error) {
+            console.log(error);
+            responseLines.push(stacks[stackId] + ': Error - ' + error.message);
+            stacksToProcess = _.without(stacksToProcess, stackId);
+        });
+        req.on('complete', function() {
+            console.log(stacksToProcess);
+            if (stacksToProcess.length == 0) {
+                res.json({
+                    text: '```' + responseLines.join("\n") + '```',
+                    username: "Who's on QA Bot"
+                });
+            }
+        });
+        req.send();
     });
 });
 

@@ -6,7 +6,8 @@
     "dependencies": {
         "express": "4.8.8",
         "body-parser": "1.8.1",
-        "slackhook": "1.0.0"
+        "slackhook": "1.0.0",
+        "aws-sdk": "2.0.15"
     },
     "engines": {
         "node": "0.10.28"

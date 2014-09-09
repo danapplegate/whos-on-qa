@@ -16,7 +16,10 @@ var slack = new Slackhook({
     domain: process.env.SLACKHOOK_DOMAIN,
     token: process.env.SLACKHOOK_TOKEN
 });
-AWS.config.update({region: 'us-east-1'});
+AWS.config.update({
+    region: 'us-east-1',
+    sslEnabled: true
+});
 var opsworks = new AWS.OpsWorks();
 
 app.set('port', (process.env.PORT || 5000));

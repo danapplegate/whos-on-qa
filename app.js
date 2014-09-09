@@ -4,8 +4,8 @@ var bodyParser = require('body-parser');
 var app = express();
 
 var slack = new Slackhook({
-    domain: 'skillshare.slack.com',
-    token: '3LoaE3ImtN3kfAJZ7xCLnMQk'
+    domain: process.env.SLACKHOOK_DOMAIN,
+    token: process.env.SLACKHOOK_TOKEN
 });
 
 app.set('port', (process.env.PORT || 5000));

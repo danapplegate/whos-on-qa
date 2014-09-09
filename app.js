@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.post('/outgoing', function(req, res) {
     console.log(req.body);
     var hook = slack.respond(req.body);
-    res.json({text: 'Hi ' + hook.user_name, username: 'Dr. Nick'});
+    res.json({text: 'Hi ' + hook.user_name, username: hook.user_name});
 });
 
 var server = app.listen(app.get('port'), function() {

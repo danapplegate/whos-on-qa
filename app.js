@@ -8,6 +8,7 @@ var slack = new Slackhook({
     token: '3LoaE3ImtN3kfAJZ7xCLnMQk'
 });
 
+app.set('port', (process.env.PORT || 5000));
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.post('/outgoing', function(req, res) {
@@ -16,6 +17,6 @@ app.post('/outgoing', function(req, res) {
     res.json({text: 'Hi ' + hook.user_name, username: 'Dr. Nick'});
 });
 
-var server = app.listen(5000, function() {
+var server = app.listen(app.get('port'), function() {
     console.log("Listening on port %d", server.address().port);
 })

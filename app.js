@@ -43,7 +43,7 @@ app.post('/outgoing', function(req, res) {
                 namePath = usernameParts.pop(),
                 userName = namePath.substring(5),
                 created = new Date(deployment.CreatedAt),
-                createdString = created.toLocaleString('en-US', {timeZone: 'America/New_York'});
+                createdString = created.toLocaleString('en-US', {timeZone: 'EDT'});
             responseLines.push(stackName + ': user ' + userName + ' since ' + createdString);
             stacksToProcess = _.without(stacksToProcess, stackId);
         });

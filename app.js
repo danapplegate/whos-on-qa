@@ -22,10 +22,24 @@ app.post('/outgoing', function(req, res) {
     };
     opsworks.describeDeployments(config, function(err, data) {
         console.log(data);
-        res.json({
-            text: data.Deployments,
-            username: hook.user_name
-        });
+        if (err) {
+            res.json({text: 'OpsWorks error: ' + err.message});
+        } else {
+            // Get the first deployment that has a IAM user ARN. We'll assume
+            // that this one is a proper deploy
+            var deployment;
+            for (var i = 0; i < data.Deployments.length; i++) {
+                deployment = data.Deployments[i];
+                if (deployment.IamUserArn) break;
+            }
+            var usernameParts = deployment.IamUserArn.split(':'),
+                namePath = usernameParts.pop(),
+                name = namePath.substring(5);
+            res.json({
+                text: 'QA: user ' + name + ' since ' + deployment.CreatedAt,
+                username: hook.user_name
+            });
+        }
     });
 });
 

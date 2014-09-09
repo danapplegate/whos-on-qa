@@ -11,7 +11,8 @@ var stacks = {
     'c7dffdc5-7a1a-4968-8d23-1221457e1449': 'qa',
     '3d75b511-fdeb-4d42-b3a1-24bf995e4b9b': 'qa-2',
     'c3a26829-7a20-4a54-a7d7-e8766a0925bd': 'qa-3',
-    '9849ffb5-ebae-4ac4-8f33-442e2a617216': 'qa-4'
+    '9849ffb5-ebae-4ac4-8f33-442e2a617216': 'qa-4',
+    '3fe0ee97-e4ce-4b49-80f5-f095250fb606': 'qa-api'
 };
 var slack = new Slackhook({
     domain: process.env.SLACKHOOK_DOMAIN,

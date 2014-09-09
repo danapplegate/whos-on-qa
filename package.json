@@ -1,0 +1,13 @@
+{
+    "name": "whos-on-qa",
+    "description": "A slackbot that quickly answers who is using which QA stack",
+    "version": "0.0.1",
+    "private": "true",
+    "dependencies": {
+        "express": "4.8.8",
+        "slackhook": "1.0.0"
+    },
+    "engines": {
+        "node": "0.10.28"
+    }
+}

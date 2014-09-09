@@ -42,8 +42,8 @@ app.post('/outgoing', function(req, res) {
                 usernameParts = deployment.IamUserArn.split(':'),
                 namePath = usernameParts.pop(),
                 userName = namePath.substring(5),
-                created = moment(deployment.CreatedAt),
-                createdString = created.format('llll');
+                created = moment.parseZone(deployment.CreatedAt).zone('-04:00'),
+                createdString = created.format('llll Z');
             responseLines.push(stackName + ': user ' + userName + ' since ' + createdString);
             stacksToProcess = _.without(stacksToProcess, stackId);
         });

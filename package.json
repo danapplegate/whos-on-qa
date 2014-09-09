@@ -5,6 +5,7 @@
     "private": "true",
     "dependencies": {
         "express": "4.8.8",
+        "body-parser": "1.8.1",
         "slackhook": "1.0.0"
     },
     "engines": {

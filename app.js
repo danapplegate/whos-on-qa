@@ -1,5 +1,6 @@
 var Slackhook = require('slackhook');
 var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
 
 var slack = new Slackhook({
@@ -7,7 +8,7 @@ var slack = new Slackhook({
     token: '3LoaE3ImtN3kfAJZ7xCLnMQk'
 });
 
-app.use(express.urlencoded());
+app.use(bodyParser.urlencoded({extended: false}));
 
 app.post('/outgoing', function(req, res) {
     console.log(req.body);

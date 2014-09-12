@@ -27,6 +27,10 @@ var opsworks = new AWS.OpsWorks();
 app.set('port', (process.env.PORT || 5000));
 app.use(bodyParser.urlencoded({extended: false}));
 
+app.get('/', function(req, res) {
+    res.send('Welcome to the Who\'s on QA bot!');
+});
+
 app.post('/outgoing', function(req, res) {
     var hook = slack.respond(req.body);
 

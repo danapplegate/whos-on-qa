@@ -59,8 +59,14 @@ app.post('/outgoing', function(req, res) {
         req.on('complete', function() {
             if (stacksToProcess.length == 0) {
                 res.json({
-                    text: '```' + responseLines.join("\n") + '```',
-                    username: "Who's on QA Bot"
+                    fallback: '```' + responseLines.join("\n") + '```',
+                    pretext: 'Current QA status',
+                    color: 'good'
+                    username: "Who's on QA Bot",
+                    fields: [
+                        'title': 'QA Stacks',
+                        'value': responseLines.join("\n")
+                    ]
                 });
             }
         });

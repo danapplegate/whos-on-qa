@@ -72,6 +72,7 @@ app.post('/outgoing', function(req, res) {
                         ]
                     }]
                 });
+                res.send();
             }
         });
         opsReq.send();

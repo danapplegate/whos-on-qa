@@ -37,8 +37,8 @@ app.post('/outgoing', function(req, res) {
     var stacksToProcess = _.keys(stacks);
     var responseLines = [];
     _.each(stacks, function(name, stackId) {
-        var req = opsworks.describeDeployments({StackId: stackId});
-        req.on('success', function(response) {
+        var opsReq = opsworks.describeDeployments({StackId: stackId});
+        opsReq.on('success', function(response) {
             var validDeployments = _.filter(response.data.Deployments, function(deployment) {
                 return deployment.IamUserArn;
             });
@@ -52,18 +52,18 @@ app.post('/outgoing', function(req, res) {
             responseLines.push(stackName + ': user ' + userName + ' since ' + createdString);
             stacksToProcess = _.without(stacksToProcess, stackId);
         });
-        req.on('error', function(error) {
+        opsReq.on('error', function(error) {
             responseLines.push(stacks[stackId] + ': Error - ' + error.message);
             stacksToProcess = _.without(stacksToProcess, stackId);
         });
-        req.on('complete', function() {
+        opsReq.on('complete', function() {
             if (stacksToProcess.length == 0) {
-                res.json({
+                slack.send({
+                    text: 'Current QA status',
+                    username: "Who's on QA Bot",
                     attachments: [{
                         fallback: '```' + responseLines.join("\n") + '```',
-                        pretext: 'Current QA status',
                         color: 'good',
-                        username: "Who's on QA Bot",
                         fields: [
                             {
                                 'title': 'QA Stacks',
@@ -74,7 +74,7 @@ app.post('/outgoing', function(req, res) {
                 });
             }
         });
-        req.send();
+        opsReq.send();
     });
 });
 

@@ -61,11 +61,13 @@ app.post('/outgoing', function(req, res) {
                 res.json({
                     fallback: '```' + responseLines.join("\n") + '```',
                     pretext: 'Current QA status',
-                    color: 'good'
+                    color: 'good',
                     username: "Who's on QA Bot",
                     fields: [
-                        'title': 'QA Stacks',
-                        'value': responseLines.join("\n")
+                        {
+                            'title': 'QA Stacks',
+                            'value': responseLines.join("\n")
+                        }
                     ]
                 });
             }
